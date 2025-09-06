@@ -131,15 +131,15 @@ function RouteComponent() {
 				</section>
 
 				{/* Section 3: Price */}
-				<section className='text-center py-8 font-bold bg-purple-950 text-white space-y-5  rounded-2xl mt-5 mx-4'>
+				<section className='text-center py-8 px-4 font-bold bg-purple-950 text-white space-y-5  rounded-2xl mt-5 mx-4'>
 					<h3 className='text-3xl mb-8'>খিমারের দাম মাত্র</h3>
 
 					<h1 className='text-5xl text-amber-500 underline-offset-[10px] underline'>
 						৯০০ টাকা
 					</h1>
 					<br />
-					<h2 className='text-3xl text-teal-500'>
-						😀 ডেলিভারি চার্জ একদম ফ্রি 😀
+					<h2 className='text-3xl text-teal-500 leading-12'>
+						ডেলিভারি চার্জ একদম ফ্রি 😀
 					</h2>
 				</section>
 				{/* Section 4: Product Carousel */}
@@ -206,15 +206,9 @@ function RouteComponent() {
 				</section>
 
 				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-6'>
-					<p className='text-lg text-amber-500 leading-12'>
-						✅ ২ টি কিনলেই পাচ্ছেন ১০০ টাকা ছাড়
-					</p>
-					<p className='text-lg text-amber-500 leading-12'>
-						✅ ৩ টি কিনলেই পাচ্ছেন ১৫০ টাকা ছাড়
-					</p>
-					<p className='text-lg text-amber-500 leading-12'>
-						✅ ৪ টি কিনলেই পাচ্ছেন ২০০ টাকা ছাড়
-					</p>
+					<p className='text-lg text-amber-500 leading-12'>✅ ২ পিস ১৭০০</p>
+					<p className='text-lg text-amber-500 leading-12'>✅ ৩ পিস ২৪৫০</p>
+					<p className='text-lg text-amber-500 leading-12'>✅ ৪ পিস ৩২০০</p>
 
 					<h2 className='mt-3 text-lg font-medium bg-amber-800 p-2 rounded-xl'>
 						✅ পাইকারি নিতে কল করুন ০১৬০২-৮১৯৩৯৪
@@ -398,11 +392,25 @@ function RouteComponent() {
 												{form.watch('quantity')}
 											</span>
 										</div>
+										<div className='flex justify-between text-base'>
+											<span className='text-lg font-medium'>ডিসকাউন্ট:</span>
+											<span className='font-extrabold'>
+												৳{' '}
+												{(form.watch('quantity') === 1 && 0.0) ||
+													(form.watch('quantity') === 2 && 100) ||
+													(form.watch('quantity') === 3 && 250) ||
+													(form.watch('quantity') === 4 && 400)}
+											</span>
+										</div>
 										<hr className='border-purple-300 my-2' />
 										<div className='flex justify-between text-xl font-bold'>
 											<span>মোট টাকা:</span>
-											<span className='font-extrabold '>
-												৳ {900 * form.watch('quantity')}
+											<span className='font-extrabold'>
+												৳{' '}
+												{(form.watch('quantity') === 1 && 900) ||
+													(form.watch('quantity') === 2 && 1700) ||
+													(form.watch('quantity') === 3 && 2450) ||
+													(form.watch('quantity') === 4 && 3200)}
 											</span>
 										</div>
 									</div>
