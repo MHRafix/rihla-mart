@@ -1,13 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createFileRoute } from '@tanstack/react-router';
@@ -88,27 +81,32 @@ function RouteComponent() {
 							)
 						}
 						src='https://cdn-icons-png.flaticon.com/128/15047/15047435.png'
-						className='h-12 w-12 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
+						className='h-8 w-8 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
 					/>
 					<img
 						onClick={() => window.open('https://wa.me/0 1602-819394', '_blank')}
 						src='https://cdn-icons-png.flaticon.com/128/3670/3670051.png'
-						className='h-12 w-12 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
+						className='h-8 w-8 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
 					/>
 					<img
 						onClick={() => (window.location.href = 'tel:+8801700000000')}
 						src='https://cdn-icons-png.flaticon.com/128/724/724664.png'
-						className='h-12 w-12 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
+						className='h-8 w-8 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
 					/>
 				</div>
 			</header>
 
 			<main className='space-y-12'>
+				<div className='text-center px-4 py-5 bg-purple-950 text-white rounded-2xl mt-5 mx-4'>
+					<h2 className='text-xl font-bold'>
+						১০০% সুতি কাপড়ের সালাত লং খিমার।
+					</h2>
+				</div>
 				{/* Section 1: Hadith */}
 				<motion.section
 					initial={{ opacity: 0, y: 20 }}
 					whileInView={{ opacity: 1, y: 0 }}
-					className='text-center px-4 py-10 bg-purple-950 text-white'
+					className='text-center px-4 py-5 bg-purple-950 text-white rounded-xl mt-5 mx-4'
 				>
 					<h2 className='text-xl md:text-4xl font-bold mb-4'>
 						রাসূলুল্লাহ (সা.) বলেন,
@@ -133,9 +131,8 @@ function RouteComponent() {
 				</section>
 
 				{/* Section 3: Price */}
-				<section className='text-center py-8 font-bold bg-purple-950 text-white space-y-5'>
-					<h3 className='text-3xl'>১০০% সুতি কাপড়</h3>
-					<h3 className='text-3xl mb-8'>দাম মাত্র</h3>
+				<section className='text-center py-8 font-bold bg-purple-950 text-white space-y-5  rounded-2xl mt-5 mx-4'>
+					<h3 className='text-3xl mb-8'>খিমারের দাম মাত্র</h3>
 
 					<h1 className='text-5xl text-amber-500 underline-offset-[10px] underline'>
 						৯০০ টাকা
@@ -197,7 +194,7 @@ function RouteComponent() {
 				</section>
 
 				{/* Section 7: Free Delivery */}
-				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-md mx-6'>
+				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-6'>
 					<h1 className='text-3xl text-amber-500 leading-12'>
 						✅ ডেলিভারি চার্জ <br /> 😀 একদম ফ্রি 😀
 					</h1>
@@ -208,6 +205,21 @@ function RouteComponent() {
 					</h2>
 				</section>
 
+				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-6'>
+					<p className='text-lg text-amber-500 leading-12'>
+						✅ ২ টি কিনলেই পাচ্ছেন ১০০ টাকা ছাড়
+					</p>
+					<p className='text-lg text-amber-500 leading-12'>
+						✅ ৩ টি কিনলেই পাচ্ছেন ১৫০ টাকা ছাড়
+					</p>
+					<p className='text-lg text-amber-500 leading-12'>
+						✅ ৪ টি কিনলেই পাচ্ছেন ২০০ টাকা ছাড়
+					</p>
+
+					<h2 className='mt-3 text-lg font-medium bg-amber-800 p-2 rounded-xl'>
+						✅ পাইকারি নিতে কল করুন ০১৬০২-৮১৯৩৯৪
+					</h2>
+				</section>
 				{/* Section 8: Checkout Form */}
 				<section className='px-4 py-10'>
 					<Card className='bg-white text-purple-950 border shadow-sm max-w-md mx-auto'>
@@ -270,11 +282,12 @@ function RouteComponent() {
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
-													ঠিকানা <span className='text-red-500'>*</span>
+													ঠিকানা - (জেলা, থানা, পোস্ট/ইউনিয়ন, গ্রাম)
+													<span className='text-red-500'>*</span>
 												</FormLabel>
 												<FormControl>
 													<Textarea
-														placeholder='ঠিকানা'
+														placeholder='বিস্তারিত ঠিকানা ...'
 														{...field}
 														className='py-6'
 													/>
@@ -303,6 +316,7 @@ function RouteComponent() {
 																Math.max(1, (field.value ?? 1) - 1)
 															)
 														}
+														disabled={field?.value === 1}
 													>
 														➖
 													</Button>
@@ -316,6 +330,7 @@ function RouteComponent() {
 														onClick={() =>
 															field.onChange((field.value ?? 1) + 1)
 														}
+														disabled={field?.value === 4}
 													>
 														➕
 													</Button>
@@ -334,21 +349,15 @@ function RouteComponent() {
 												<FormLabel>
 													প্রোডাক্ট কোড <span className='text-red-500'>*</span>
 												</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													value={field.value}
-												>
-													<FormControl>
-														<SelectTrigger className='py-6 w-full'>
-															<SelectValue placeholder='প্রোডাক্ট কোড নির্বাচন করুন' />
-														</SelectTrigger>
-													</FormControl>
-													<SelectContent className='w-full'>
-														<SelectItem value='SK-101'>SK-101</SelectItem>
-														<SelectItem value='SK-102'>SK-102</SelectItem>
-														<SelectItem value='SK-103'>SK-103</SelectItem>
-													</SelectContent>
-												</Select>
+
+												<FormControl>
+													<Input
+														placeholder='প্রোডাক্ট কোড দিন'
+														{...field}
+														className='py-6'
+													/>
+												</FormControl>
+
 												<FormMessage />
 											</FormItem>
 										)}
@@ -426,7 +435,7 @@ const schema = yup.object({
 		.typeError('সংখ্যা দিন')
 		.min(1, 'কমপক্ষে ১ টি দিতে হবে')
 		.required('কমপক্ষে ১ টি দিতে হবে'),
-	code: yup.string().required('প্রোডাক্ট কোড নির্বাচন করুন'),
+	code: yup.string().required('প্রোডাক্ট কোড দিন'),
 	extraNote: yup
 		.string()
 		.transform((val) => (val === '' ? undefined : val)) // 👈 fix for optional
