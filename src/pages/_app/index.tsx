@@ -9,26 +9,29 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { createFileRoute } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
-import { Facebook, MessageCircle, Phone } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from '@/components/ui/form';
 
 export const Route = createFileRoute('/_app/')({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const [form, setForm] = useState({
-		name: '',
-		phone: '',
-		address: '',
-		quantity: 1,
-		code: '',
-	});
-
 	const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
 		loop: true,
 		slides: {
@@ -49,51 +52,53 @@ function RouteComponent() {
 		return () => clearInterval(timer);
 	}, [slider]);
 
-	// const productImages = [
-	// 	'https://images.unsplash.com/photo-1606813902768-9b82e0e0a5c7',
-	// 	'https://images.unsplash.com/photo-1581291519195-ef11498d1cf5',
-	// 	'https://images.unsplash.com/photo-1519681393784-d120267933ba',
-	// 	'https://images.unsplash.com/photo-1522202176988-66273c2fd55f',
-	// 	'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d',
-	// 	'https://images.unsplash.com/photo-1531177075249-4e6e4f9d7854',
-	// 	'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5',
-	// 	'https://images.unsplash.com/photo-1517423440428-a5a00ad493e8',
-	// 	'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
-	// 	'https://images.unsplash.com/photo-1518709268805-4e9042af9f23',
-	// ];
+	const form = useForm<FormValues>({
+		resolver: yupResolver(schema),
+		defaultValues: {
+			name: '',
+			phone: '',
+			address: '',
+			quantity: 1,
+			code: '',
+			extraNote: undefined, // 👈 now optional
+		},
+	});
 
+	// ✅ submit handler
+	const onSubmit = (data: FormValues) => {
+		console.log('Order Submitted:', data);
+	};
 	const productImages = Array.from(
-		{ length: 20 },
+		{ length: 40 },
 		(_, i) => `https://picsum.photos/400/400?random=${i + 1}`
 	);
 
 	return (
 		<div className='bg-white text-purple-950 min-h-screen'>
 			{/* Header */}
-			<header className='flex justify-between items-center px-6 py-4 shadow-md border-b'>
+			<header className='flex justify-between items-center px-4 py-4 shadow-md border-b'>
 				<h1 className='text-2xl font-bold'>RihlaMart</h1>
 				<div className='flex gap-3'>
-					<Button
-						className='rounded-full bg-purple-950 text-white'
-						size='icon'
-						onClick={() => window.open('https://facebook.com', '_blank')}
-					>
-						<Facebook className='h-5 w-5' />
-					</Button>
-					<Button
-						className='rounded-full bg-purple-950 text-white'
-						size='icon'
-						onClick={() => window.open('https://wa.me/8801700000000', '_blank')}
-					>
-						<MessageCircle className='h-5 w-5' />
-					</Button>
-					<Button
-						className='rounded-full bg-purple-950 text-white'
-						size='icon'
+					<img
+						onClick={() =>
+							window.open(
+								'https://facebook.com/sunnahsmartcollection',
+								'_blank'
+							)
+						}
+						src='https://cdn-icons-png.flaticon.com/128/15047/15047435.png'
+						className='h-12 w-12 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
+					/>
+					<img
+						onClick={() => window.open('https://wa.me/0 1602-819394', '_blank')}
+						src='https://cdn-icons-png.flaticon.com/128/3670/3670051.png'
+						className='h-12 w-12 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
+					/>
+					<img
 						onClick={() => (window.location.href = 'tel:+8801700000000')}
-					>
-						<Phone className='h-5 w-5' />
-					</Button>
+						src='https://cdn-icons-png.flaticon.com/128/724/724664.png'
+						className='h-12 w-12 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
+					/>
 				</div>
 			</header>
 
@@ -102,21 +107,24 @@ function RouteComponent() {
 				<motion.section
 					initial={{ opacity: 0, y: 20 }}
 					whileInView={{ opacity: 1, y: 0 }}
-					className='text-center px-6 py-10'
+					className='text-center px-4 py-10 bg-purple-950 text-white'
 				>
-					<h2 className='text-xl md:text-4xl font-bold'>
+					<h2 className='text-xl md:text-4xl font-bold mb-4'>
+						রাসূলুল্লাহ (সা.) বলেন,
+					</h2>
+					<h2 className='text-3xl font-bold mb-4'>
 						لا تقبل صلاة الحائض إلا بخمار
 					</h2>
-					<p className='mt-2 text-lg font-semibold'>
+					<p className='mt-2 text-xl font-semibold'>
 						খিমার পরিধান ছাড়া কোনো প্রাপ্ত বয়স্কা নারীর নামাজ কবূল হবেনা।
 						(তিরমিজি ৩৭৭, মিশকাত ৭৬২ ও আবু দাউদ ৬৪১)
 					</p>
 				</motion.section>
 
 				{/* Section 2: Video */}
-				<section className='flex justify-center px-6'>
+				<section className='flex justify-center px-4'>
 					<iframe
-						className='w-full md:w-2/3 h-64 md:h-96 rounded-xl border'
+						className='w-full h-[350px] rounded-xl border'
 						src='https://www.youtube.com/embed/dQw4w9WgXcQ'
 						title='Product Video'
 						allowFullScreen
@@ -124,12 +132,20 @@ function RouteComponent() {
 				</section>
 
 				{/* Section 3: Price */}
-				<section className='text-center py-6 font-bold text-2xl'>
-					সালাত খিমার প্রাইস ৮৯৯ টাকা। সারা বাংলাদেশে ডেলিভারি চার্জ একদম ফ্রি।
-				</section>
+				<section className='text-center py-8 font-bold bg-purple-950 text-white space-y-5'>
+					<h3 className='text-3xl'>১০০% সুতি কাপড়</h3>
+					<h3 className='text-3xl mb-8'>দাম মাত্র</h3>
 
+					<h1 className='text-5xl text-amber-500 underline-offset-[10px] underline'>
+						৯০০ টাকা
+					</h1>
+					<br />
+					<h2 className='text-3xl text-teal-500'>
+						😀 ডেলিভারি চার্জ একদম ফ্রি 😀
+					</h2>
+				</section>
 				{/* Section 4: Product Carousel */}
-				<section className='px-6'>
+				<section className='px-4'>
 					<div
 						ref={sliderRef}
 						className='keen-slider rounded-xl overflow-hidden'
@@ -147,9 +163,9 @@ function RouteComponent() {
 				</section>
 
 				{/* Section 5: Product Details */}
-				<section className='px-6'>
-					<Card className='bg-white text-purple-950 border shadow-sm'>
-						<CardContent className='px-6 py-3 space-y-3'>
+				<section className='px-4'>
+					<Card className='text-white bg-purple-950 border shadow-sm'>
+						<CardContent className='px-4 py-3 space-y-3'>
 							<h3 className='text-2xl font-bold'>প্রোডাক্ট ডিটেইলসঃ</h3>
 							<ul className='list-disc pl-5 space-y-2 text-lg font-medium'>
 								<li>১০০% পিওর সুতি কাপড় (ভেক্সি ফেব্রিক্স)</li>
@@ -166,102 +182,228 @@ function RouteComponent() {
 				</section>
 
 				{/* Section 6: Image Grid */}
-				<section className='px-6'>
+				<section className='px-4'>
 					<div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
 						{productImages.map((img, idx) => (
 							<img
 								key={idx}
 								src={img}
 								alt='Product'
-								className='w-full h-44 object-cover rounded-lg border'
+								className='w-full h-[250px] object-cover rounded-lg border'
 							/>
 						))}
 					</div>
 				</section>
 
 				{/* Section 7: Free Delivery */}
-				<section className='text-center py-6 px-4 font-bold text-lg bg-purple-50 rounded-md mx-6'>
-					✅ ডেলিভারি চার্জ : সারা বাংলাদেশ সম্পূর্ণ ফ্রি!
-					<br />
-					অগ্রিম কোন টাকা দিতে হবে না। পার্সেল হাতে বুঝে পেয়ে, চেক করে তারপর
-					ডেলিভারি ম্যানের কাছে টাকা পরিশোধ করতে পারবেন।
+				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-md mx-6'>
+					<h1 className='text-3xl text-amber-500 leading-12'>
+						✅ ডেলিভারি চার্জ <br /> 😀 একদম ফ্রি 😀
+					</h1>
+
+					<h2 className='mt-3 text-xl font-medium leading-8'>
+						অগ্রিম কোন টাকা দিতে হবে না। পার্সেল হাতে বুঝে পেয়ে, চেক করে তারপর
+						ডেলিভারি ম্যানের কাছে টাকা পরিশোধ করতে পারবেন।
+					</h2>
 				</section>
 
 				{/* Section 8: Checkout Form */}
-				<section className='px-6 py-10'>
+				<section className='px-4 py-10'>
 					<Card className='bg-white text-purple-950 border shadow-sm max-w-md mx-auto'>
 						<CardContent className='p-6 space-y-4'>
 							<h3 className='text-2xl font-bold text-center'>
 								অর্ডার করুন এখনই
 							</h3>
 
-							<Input
-								placeholder='আপনার নাম'
-								value={form.name}
-								onChange={(e) => setForm({ ...form, name: e.target.value })}
-								className='border w-full py-6'
-							/>
-
-							<Input
-								placeholder='মোবাইল নাম্বার'
-								value={form.phone}
-								onChange={(e) => setForm({ ...form, phone: e.target.value })}
-								className='border w-full py-6'
-							/>
-
-							<Textarea
-								placeholder='ঠিকানা'
-								value={form.address}
-								onChange={(e) => setForm({ ...form, address: e.target.value })}
-								className='border w-full py-6'
-							/>
-
-							{/* Quantity with grid stepper */}
-							<div className='grid grid-cols-3 w-full border rounded-lg overflow-hidden'>
-								<Button
-									type='button'
-									variant='ghost'
-									className='rounded-none bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold py-6'
-									onClick={() =>
-										setForm({
-											...form,
-											quantity: Math.max(1, (form.quantity || 1) - 1),
-										})
-									}
+							<Form {...form}>
+								<form
+									onSubmit={form.handleSubmit(onSubmit)}
+									className='space-y-4'
 								>
-									➖
-								</Button>
-								<div className='flex items-center justify-center bg-white font-semibold'>
-									{form.quantity || 1}
-								</div>
-								<Button
-									type='button'
-									variant='ghost'
-									className='rounded-none bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold py-6'
-									onClick={() =>
-										setForm({ ...form, quantity: (form.quantity || 1) + 1 })
-									}
-								>
-									➕
-								</Button>
-							</div>
+									{/* Name */}
+									<FormField
+										control={form.control}
+										name='name'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>
+													আপনার নাম <span className='text-red-500'>*</span>
+												</FormLabel>
+												<FormControl>
+													<Input
+														placeholder='আপনার নাম'
+														{...field}
+														className='py-6'
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
 
-							<Select
-								onValueChange={(value) => setForm({ ...form, code: value })}
-							>
-								<SelectTrigger className='border w-full py-6'>
-									<SelectValue placeholder='প্রোডাক্ট কোড নির্বাচন করুন' />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value='SK-101'>SK-101</SelectItem>
-									<SelectItem value='SK-102'>SK-102</SelectItem>
-									<SelectItem value='SK-103'>SK-103</SelectItem>
-								</SelectContent>
-							</Select>
+									{/* Phone */}
+									<FormField
+										control={form.control}
+										name='phone'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>
+													মোবাইল নাম্বার <span className='text-red-500'>*</span>
+												</FormLabel>
+												<FormControl>
+													<Input
+														placeholder='মোবাইল নাম্বার'
+														{...field}
+														className='py-6'
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
 
-							<Button className='w-full bg-purple-950 text-white font-bold py-6'>
-								অর্ডার কনফার্ম করুন
-							</Button>
+									{/* Address */}
+									<FormField
+										control={form.control}
+										name='address'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>
+													ঠিকানা <span className='text-red-500'>*</span>
+												</FormLabel>
+												<FormControl>
+													<Textarea
+														placeholder='ঠিকানা'
+														{...field}
+														className='py-6'
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									{/* Quantity with stepper */}
+									<FormField
+										control={form.control}
+										name='quantity'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>
+													কোয়ান্টিটি <span className='text-red-500'>*</span>
+												</FormLabel>
+												<div className='grid grid-cols-3 w-full border rounded-lg overflow-hidden'>
+													<Button
+														type='button'
+														variant='ghost'
+														className='rounded-none bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold py-6'
+														onClick={() =>
+															field.onChange(
+																Math.max(1, (field.value ?? 1) - 1)
+															)
+														}
+													>
+														➖
+													</Button>
+													<div className='flex items-center justify-center bg-white font-semibold'>
+														{field?.value}
+													</div>
+													<Button
+														type='button'
+														variant='ghost'
+														className='rounded-none bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold py-6'
+														onClick={() =>
+															field.onChange((field.value ?? 1) + 1)
+														}
+													>
+														➕
+													</Button>
+												</div>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									{/* Product Code */}
+									<FormField
+										control={form.control}
+										name='code'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>
+													প্রোডাক্ট কোড <span className='text-red-500'>*</span>
+												</FormLabel>
+												<Select
+													onValueChange={field.onChange}
+													value={field.value}
+												>
+													<FormControl>
+														<SelectTrigger className='py-6 w-full'>
+															<SelectValue placeholder='প্রোডাক্ট কোড নির্বাচন করুন' />
+														</SelectTrigger>
+													</FormControl>
+													<SelectContent className='w-full'>
+														<SelectItem value='SK-101'>SK-101</SelectItem>
+														<SelectItem value='SK-102'>SK-102</SelectItem>
+														<SelectItem value='SK-103'>SK-103</SelectItem>
+													</SelectContent>
+												</Select>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									{/* Extra Note (Optional) */}
+									<FormField
+										control={form.control}
+										name='extraNote'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>অতিরিক্ত নোট (অপশনাল)</FormLabel>
+												<FormControl>
+													<Textarea
+														placeholder='অতিরিক্ত কিছু জানাতে চাইলে লিখুন'
+														{...field}
+														className='py-6'
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<div className='text-purple-950 bg-white p-4 rounded-xl border border-purple-950 space-y-2'>
+										<h2 className='text-lg font-semibold text-center'>
+											অর্ডার সারাংশ
+										</h2>
+										<div className='flex justify-between text-base'>
+											<span className='text-lg font-medium'>একক মূল্য:</span>
+											<span className='text-lg font-medium'>
+												<span className='font-extrabold'>৳</span> 900
+											</span>
+										</div>
+										<div className='flex justify-between text-base'>
+											<span className='text-lg font-medium'>কোয়ান্টিটি:</span>
+											<span className='text-lg font-medium'>
+												{form.watch('quantity')}
+											</span>
+										</div>
+										<hr className='border-purple-300 my-2' />
+										<div className='flex justify-between text-xl font-bold'>
+											<span>মোট টাকা:</span>
+											<span className='font-extrabold '>
+												৳ {900 * form.watch('quantity')}
+											</span>
+										</div>
+									</div>
+
+									<Button
+										type='submit'
+										className='w-full bg-purple-950 text-white font-bold py-7 cursor-pointer text-xl'
+									>
+										অর্ডার কনফার্ম করুন
+									</Button>
+								</form>
+							</Form>
 						</CardContent>
 					</Card>
 				</section>
@@ -269,3 +411,31 @@ function RouteComponent() {
 		</div>
 	);
 }
+// ✅ Yup validation schema
+const schema = yup.object({
+	name: yup.string().required('আপনার নাম দিন'),
+	phone: yup
+		.string()
+		.required('মোবাইল নাম্বার দিন')
+		.matches(/^(?:\+?88)?01[3-9]\d{8}$/, 'সঠিক মোবাইল নাম্বার দিন'),
+	address: yup.string().required('ঠিকানা দিন'),
+	quantity: yup
+		.number()
+		.typeError('সংখ্যা দিন')
+		.min(1, 'কমপক্ষে ১ টি দিতে হবে')
+		.required('কমপক্ষে ১ টি দিতে হবে'),
+	code: yup.string().required('প্রোডাক্ট কোড নির্বাচন করুন'),
+	extraNote: yup
+		.string()
+		.transform((val) => (val === '' ? undefined : val)) // 👈 fix for optional
+		.optional(),
+});
+
+type FormValues = {
+	name: string;
+	phone: string;
+	address: string;
+	quantity: number;
+	code: string;
+	extraNote?: string; // 👈 এখানে optional
+};
