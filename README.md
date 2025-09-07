@@ -1,13 +1,20 @@
 {
-productMainTitle: "",
+productMainTitle: "১০০% সুতি কাপড়ের সালাত লং খিমার।",
 productVideoLink: "",
 unitPrice: 900,
 priceFor2product: 1700,
 priceFor3product: 2450,
 priceFor4product: 3200,
-deliveryChargeText: "",
-mobileNumber: "",
+mobileNumber: "01858019788",
 facebook: "",
-whatsappNumber: ""
-description: [""]
+whatsappNumber: "01858019788"
+description: [
+"১০০% পিওর সুতি কাপড় (ভেক্সি ফেব্রিক্স)",
+"আমাদের নিজস্ব সুদক্ষ কারিগর দ্বারা তৈরি।"
+"দুই হাতের কব্জিতে উন্নতমানের লেইসওয়ার্ক",
+"লম্বা ৬৮ থেকে ৭২ ইঞ্চি",
+"চওড়া/ঘের ৮৫ থেকে ৯০ ইঞ্চি",
+"ফেব্রিকস কোয়ালিটি এবং কালার, কশ গ্যারান্টি",
+"সম্পূর্ণ শরীয়াহ সম্মত পোষাক"
+]
 }
