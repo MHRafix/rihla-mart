@@ -7,7 +7,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -25,6 +25,8 @@ export const Route = createFileRoute('/_app/')({
 });
 
 function RouteComponent() {
+	const [productData, setProductData] = useState<ProductDataType>();
+
 	const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
 		loop: true,
 		slides: {
@@ -67,6 +69,17 @@ function RouteComponent() {
 		(_, i) => `https://picsum.photos/400/400?random=${i + 1}`
 	);
 
+	useEffect(() => {
+		fetch(
+			'https://raw.githubusercontent.com/MHRafix/rihla-mart-data/main/data.json'
+		)
+			.then((res) => res.json())
+			.then((data) => {
+				setProductData(data);
+			})
+			.catch((err) => console.error(err));
+	}, []);
+
 	return (
 		<div className='bg-white text-purple-950 min-h-screen'>
 			{/* Header */}
@@ -84,12 +97,19 @@ function RouteComponent() {
 						className='h-8 w-8 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
 					/>
 					<img
-						onClick={() => window.open('https://wa.me/0 1602-819394', '_blank')}
+						onClick={() =>
+							window.open(
+								`https://wa.me/${productData?.whatsappNumber}`,
+								'_blank'
+							)
+						}
 						src='https://cdn-icons-png.flaticon.com/128/3670/3670051.png'
 						className='h-8 w-8 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
 					/>
 					<img
-						onClick={() => (window.location.href = 'tel:+8801700000000')}
+						onClick={() =>
+							(window.location.href = `tel:${productData?.whatsappNumber}`)
+						}
 						src='https://cdn-icons-png.flaticon.com/128/724/724664.png'
 						className='h-8 w-8 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
 					/>
@@ -135,7 +155,7 @@ function RouteComponent() {
 					<h3 className='text-3xl mb-8'>খিমারের দাম মাত্র</h3>
 
 					<h1 className='text-5xl text-amber-500 underline-offset-[10px] underline'>
-						৯০০ টাকা
+						{productData?.unitPrice} টাকা
 					</h1>
 					<br />
 					<h2 className='text-3xl text-teal-500 leading-12'>
@@ -166,14 +186,9 @@ function RouteComponent() {
 						<CardContent className='px-4 py-3 space-y-3'>
 							<h3 className='text-2xl font-bold'>প্রোডাক্ট ডিটেইলসঃ</h3>
 							<ul className='list-disc pl-5 space-y-2 text-lg font-medium'>
-								<li>১০০% পিওর সুতি কাপড় (ভেক্সি ফেব্রিক্স)</li>
-								<li>আমাদের নিজস্ব সুদক্ষ কারিগর দ্বারা তৈরি।</li>
-								<li>দুই হাতের কব্জিতে উন্নতমানের লেইসওয়ার্ক</li>
-								<li>লম্বা ৬৮ থেকে ৭২ ইঞ্চি</li>
-								<li>চওড়া/ঘের ৮৫ থেকে ৯০ ইঞ্চি</li>
-								<li>থুতনি ও হাতায় সফট ইলাস্টিক রাবার</li>
-								<li>ফেব্রিকস কোয়ালিটি এবং কালার, কশ গ্যারান্টি</li>
-								<li>সম্পূর্ণ শরীয়াহ সম্মত পোষাক</li>
+								{productData?.description?.map((description, idx) => (
+									<li key={idx}>{description}</li>
+								))}
 							</ul>
 						</CardContent>
 					</Card>
@@ -211,7 +226,7 @@ function RouteComponent() {
 					<p className='text-lg text-amber-500 leading-12'>✅ ৪ পিস ৩২০০</p>
 
 					<h2 className='mt-3 text-lg font-medium bg-amber-800 p-2 rounded-xl'>
-						✅ পাইকারি নিতে কল করুন ০১৬০২-৮১৯৩৯৪
+						✅ পাইকারি নিতে কল করুন {productData?.whatsappNumber}
 					</h2>
 				</section>
 				{/* Section 8: Checkout Form */}
@@ -457,4 +472,17 @@ type FormValues = {
 	quantity: number;
 	code: string;
 	extraNote?: string; // 👈 এখানে optional
+};
+
+type ProductDataType = {
+	productMainTitle: string;
+	productVideoLink: string;
+	unitPrice: number;
+	priceFor2product: number;
+	priceFor3product: number;
+	priceFor4product: number;
+	mobileNumber: string;
+	facebook: string;
+	whatsappNumber: string;
+	description: string[];
 };
