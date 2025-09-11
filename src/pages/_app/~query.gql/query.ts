@@ -12,6 +12,19 @@ export const All_Products_Query = gql`
 					key
 					externalUrl
 				}
+
+				carouselImages {
+					bucket
+					region
+					key
+					externalUrl
+				}
+				gallery {
+					bucket
+					region
+					key
+					externalUrl
+				}
 				orgUID
 				salePrice
 				regularPrice

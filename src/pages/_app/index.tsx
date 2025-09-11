@@ -271,10 +271,10 @@ function RouteComponent() {
 				{/* Section 6: Image Grid */}
 				<section className='px-4'>
 					<div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-						{productImages.map((img, idx) => (
+						{productFetchedData?.carouselImages?.map((img, idx) => (
 							<img
 								key={idx}
-								src={img}
+								src={img?.externalUrl!}
 								alt='Product'
 								className='w-full h-[250px] object-cover rounded-xl border'
 							/>
