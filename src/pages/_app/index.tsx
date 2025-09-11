@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
@@ -19,6 +19,16 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form';
+import {
+	OrderStatus,
+	PaymentMethod,
+	PaymentStatus,
+	ProductPagination,
+} from '@/gql/graphql';
+import { gqlRequest } from '@/lib/api-client';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
+import { All_Products_Query, Place_Order_Mutation } from './~query.gql/query';
 
 export const Route = createFileRoute('/_app/')({
 	component: RouteComponent,
@@ -26,6 +36,7 @@ export const Route = createFileRoute('/_app/')({
 
 function RouteComponent() {
 	const [productData, setProductData] = useState<ProductDataType>();
+	const navigate = useNavigate();
 
 	const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
 		loop: true,
@@ -60,10 +71,67 @@ function RouteComponent() {
 		},
 	});
 
+	const placeOrder = useMutation({
+		mutationFn: (payload: any) =>
+			gqlRequest({
+				query: Place_Order_Mutation,
+				variables: payload,
+			}),
+		onSuccess(data) {
+			toast.success('Order has been placed.');
+			// @ts-ignore
+			navigate({ to: `/order-success/${data?.placeOrder?._id}` });
+		},
+	});
+
+	const { data: productFetchedData } = useQuery({
+		queryKey: ['All_Products_Query'],
+		queryFn: async () => {
+			const res = await gqlRequest<{ products: ProductPagination }>({
+				query: All_Products_Query,
+				variables: {
+					orgUid: import.meta.env.VITE_APP_ORGANIZATION_UID,
+				},
+			});
+			return res?.products?.nodes?.[0];
+		},
+	});
+
 	// ✅ submit handler
 	const onSubmit = (data: FormValues) => {
-		console.log('Order Submitted:', data);
+		const productPrice = priceByQuantity(data?.quantity, productData!);
+
+		const payload = {
+			payload: {
+				items: [
+					{
+						product: productFetchedData?._id,
+						price: productPrice,
+						quantity: data?.quantity,
+						code: data?.code,
+						subtotal: productPrice,
+					},
+				],
+				status: OrderStatus.Pending,
+				billing: {
+					name: data?.name,
+					phone: data?.phone,
+					address: data?.address,
+					extraNote: data?.extraNote,
+				},
+				total: productPrice,
+				deliveryFee: 0,
+				payment: {
+					amount: productPrice,
+					method: PaymentMethod.CashOnDelivery,
+					status: PaymentStatus.Due,
+				},
+				orgUID: import.meta.env.VITE_APP_ORGANIZATION_UID,
+			},
+		};
+		placeOrder?.mutate(payload);
 	};
+
 	const productImages = Array.from(
 		{ length: 40 },
 		(_, i) => `https://picsum.photos/400/400?random=${i + 1}`
@@ -117,7 +185,7 @@ function RouteComponent() {
 			</header>
 
 			<main className='space-y-12'>
-				<div className='text-center px-4 py-5 bg-purple-950 text-white rounded-2xl mt-5 mx-4'>
+				<div className='text-center px-4 py-5 bg-purple-950 text-white rounded-xl mt-5 mx-4'>
 					<h2 className='text-xl font-bold'>
 						১০০% সুতি কাপড়ের সালাত লং খিমার।
 					</h2>
@@ -151,17 +219,23 @@ function RouteComponent() {
 				</section>
 
 				{/* Section 3: Price */}
-				<section className='text-center py-8 px-4 font-bold bg-purple-950 text-white space-y-5  rounded-2xl mt-5 mx-4'>
-					<h3 className='text-3xl mb-8'>খিমারের দাম মাত্র</h3>
+				<section className='text-center py-8 font-bold space-y-6 rounded-xl mt-5 mx-4'>
+					{/* Title & Price Block */}
+					<div className='bg-purple-950 text-white rounded-xl p-6 space-y-4 shadow-lg'>
+						<h3 className='text-2xl'>
+							খিমার প্রাইস{' '}
+							<span className='ml-2 text-4xl font-extrabold text-amber-400 underline underline-offset-[10px]'>
+								{productData?.unitPrice} টাকা
+							</span>
+						</h3>
+					</div>
 
-					<h1 className='text-5xl text-amber-500 underline-offset-[10px] underline'>
-						{productData?.unitPrice} টাকা
-					</h1>
-					<br />
-					<h2 className='text-3xl text-teal-500 leading-12'>
-						ডেলিভারি চার্জ একদম ফ্রি 😀
-					</h2>
+					{/* Delivery Block */}
+					<div className='bg-teal-800 text-white rounded-xl p-5 shadow-md'>
+						<h2 className='text-2xl'>ডেলিভারি চার্জ ফ্রি 😀</h2>
+					</div>
 				</section>
+
 				{/* Section 4: Product Carousel */}
 				<section className='px-4'>
 					<div
@@ -202,14 +276,14 @@ function RouteComponent() {
 								key={idx}
 								src={img}
 								alt='Product'
-								className='w-full h-[250px] object-cover rounded-lg border'
+								className='w-full h-[250px] object-cover rounded-xl border'
 							/>
 						))}
 					</div>
 				</section>
 
 				{/* Section 7: Free Delivery */}
-				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-6'>
+				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-4'>
 					<h1 className='text-3xl text-amber-500 leading-12'>
 						✅ ডেলিভারি চার্জ <br /> 😀 একদম ফ্রি 😀
 					</h1>
@@ -220,7 +294,7 @@ function RouteComponent() {
 					</h2>
 				</section>
 
-				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-6'>
+				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-4'>
 					<p className='text-lg text-amber-500 leading-12'>✅ ২ পিস ১৭০০</p>
 					<p className='text-lg text-amber-500 leading-12'>✅ ৩ পিস ২৪৫০</p>
 					<p className='text-lg text-amber-500 leading-12'>✅ ৪ পিস ৩২০০</p>
@@ -230,8 +304,8 @@ function RouteComponent() {
 					</h2>
 				</section>
 				{/* Section 8: Checkout Form */}
-				<section className='px-4 py-10'>
-					<Card className='bg-white text-purple-950 border shadow-sm max-w-md mx-auto'>
+				<section className='mx-4 py-10'>
+					<Card className='bg-white text-purple-950 border shadow-sm mx-auto'>
 						<CardContent className='p-6 space-y-4'>
 							<h3 className='text-2xl font-bold text-center'>
 								অর্ডার করুন এখনই
@@ -315,7 +389,7 @@ function RouteComponent() {
 												<FormLabel>
 													কোয়ান্টিটি <span className='text-red-500'>*</span>
 												</FormLabel>
-												<div className='grid grid-cols-3 w-full border rounded-lg overflow-hidden'>
+												<div className='grid grid-cols-3 w-full border rounded-xl overflow-hidden'>
 													<Button
 														type='button'
 														variant='ghost'
@@ -411,10 +485,10 @@ function RouteComponent() {
 											<span className='text-lg font-medium'>ডিসকাউন্ট:</span>
 											<span className='font-extrabold'>
 												৳{' '}
-												{(form.watch('quantity') === 1 && 0.0) ||
-													(form.watch('quantity') === 2 && 100) ||
+												{(form.watch('quantity') === 2 && 100) ||
 													(form.watch('quantity') === 3 && 250) ||
-													(form.watch('quantity') === 4 && 400)}
+													(form.watch('quantity') === 4 && 400) ||
+													0.0}
 											</span>
 										</div>
 										<hr className='border-purple-300 my-2' />
@@ -485,4 +559,20 @@ type ProductDataType = {
 	facebook: string;
 	whatsappNumber: string;
 	description: string[];
+};
+
+const priceByQuantity = (quantity: number, productData: ProductDataType) => {
+	switch (quantity) {
+		case 1:
+			return productData?.unitPrice;
+		case 2:
+			return productData?.priceFor2product;
+		case 3:
+			return productData?.priceFor3product;
+		case 4:
+			return productData?.priceFor4product;
+
+		default:
+			break;
+	}
 };
