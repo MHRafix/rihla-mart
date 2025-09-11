@@ -27,6 +27,8 @@ import {
 } from '@/gql/graphql';
 import { gqlRequest } from '@/lib/api-client';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { Pause, Play } from 'lucide-react';
+import { useRef } from 'react';
 import toast from 'react-hot-toast';
 import { All_Products_Query, Place_Order_Mutation } from './~query.gql/query';
 
@@ -148,6 +150,19 @@ function RouteComponent() {
 			.catch((err) => console.error(err));
 	}, []);
 
+	const videoRef = useRef<HTMLVideoElement>(null);
+	const [isPlaying, setIsPlaying] = useState(false);
+
+	const handleTogglePlay = () => {
+		if (!videoRef.current) return;
+		if (isPlaying) {
+			videoRef.current.pause();
+			setIsPlaying(false);
+		} else {
+			videoRef.current.play();
+			setIsPlaying(true);
+		}
+	};
 	return (
 		<div className='bg-white text-purple-950 min-h-screen'>
 			{/* Header */}
@@ -209,17 +224,33 @@ function RouteComponent() {
 				</motion.section>
 
 				{/* Section 2: Video */}
-				<section className='flex justify-center px-4'>
-					<iframe
-						className='w-full h-[350px] rounded-xl border'
-						src='https://www.youtube.com/embed/dQw4w9WgXcQ'
-						title='Product Video'
-						allowFullScreen
-					/>
-				</section>
+				<div className='mx-auto px-4'>
+					<div className='relative !w-full h-[400px] overflow-hidden rounded-2xl shadow-lg bg-black aspect-video'>
+						<video
+							ref={videoRef}
+							className='absolute inset-0 w-full h-full object-fill rounded-2xl'
+							src='/video.mp4'
+							controls={false} // hide default controls
+						/>
+
+						{/* Center play button */}
+						<button
+							onClick={handleTogglePlay}
+							className='absolute inset-0 flex items-center justify-center'
+						>
+							<div className='bg-black/50 rounded-full p-6 hover:bg-black/70 transition'>
+								{isPlaying ? (
+									<Pause className='w-10 h-10 text-white' />
+								) : (
+									<Play className='w-10 h-10 text-white' />
+								)}
+							</div>
+						</button>
+					</div>
+				</div>
 
 				{/* Section 3: Price */}
-				<section className='text-center py-8 font-bold space-y-6 rounded-xl mt-5 mx-4'>
+				<section className='text-center font-bold space-y-6 rounded-xl mx-4'>
 					{/* Title & Price Block */}
 					<div className='bg-purple-950 text-white rounded-xl p-6 space-y-4 shadow-lg'>
 						<h3 className='text-2xl'>
