@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { Check, CircleCheckBigIcon, CopyIcon } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import Confetti from 'react-confetti';
@@ -37,7 +37,7 @@ function RouteComponent() {
 	};
 
 	return (
-		<div className='relative w-full overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-[#0B061A] dark:to-[#0B061A] text-slate-900 dark:text-slate-100'>
+		<div className='relative w-full h-screen overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-[#0B061A] dark:to-[#0B061A] text-slate-900 dark:text-slate-100'>
 			{/* Confetti */}
 			<Confetti
 				width={width}
@@ -91,20 +91,20 @@ function RouteComponent() {
 
 					{/* Actions */}
 					<div className='mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4'>
-						<a
-							href='/'
-							className='w-full sm:w-auto inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium bg-emerald-600 hover:bg-emerald-700 text-white transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500'
+						<Link
+							to='/'
+							className='w-full sm:w-auto inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium bg-purple-950 hover:bg-purple-900 text-white transition focus:outline-none'
 						>
 							Continue Shopping
-						</a>
-						<a
+						</Link>
+						{/* <a
 							href={
 								orderId && orderId !== '—' ? `/orders/${orderId}` : '/orders'
 							}
 							className='w-full sm:w-auto inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium border border-slate-200 dark:border-purple-800 bg-white hover:bg-slate-50 dark:bg-[#140a29] dark:hover:bg-[#1A1030] transition focus:outline-none'
 						>
 							View Order Details
-						</a>
+						</a> */}
 					</div>
 
 					{/* Tips */}

@@ -80,7 +80,7 @@ function RouteComponent() {
 		onSuccess(data) {
 			toast.success('Order has been placed.');
 			// @ts-ignore
-			navigate({ to: `/order-success/${data?.placeOrder?._id}` });
+			navigate({ to: `/order-success?orderId=${data?.placeOrder?._id}` });
 		},
 	});
 
