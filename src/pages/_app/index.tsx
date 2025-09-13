@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { motion } from 'framer-motion';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 import { useEffect, useState } from 'react';
@@ -203,11 +202,7 @@ function RouteComponent() {
 					</h2>
 				</div>
 				{/* Section 1: Hadith */}
-				<motion.section
-					initial={{ opacity: 0, y: 20 }}
-					whileInView={{ opacity: 1, y: 0 }}
-					className='text-center px-4 py-5 bg-purple-950 text-white rounded-xl mt-5 mx-4'
-				>
+				<section className='text-center px-4 py-5 bg-purple-950 text-white rounded-xl mt-5 mx-4'>
 					<h2 className='text-xl md:text-4xl font-bold mb-4'>
 						রাসূলুল্লাহ (সা.) বলেন,
 					</h2>
@@ -218,7 +213,7 @@ function RouteComponent() {
 						খিমার পরিধান ছাড়া কোনো প্রাপ্ত বয়স্কা নারীর নামাজ কবূল হবেনা।
 						(তিরমিজি ৩৭৭, মিশকাত ৭৬২ ও আবু দাউদ ৬৪১)
 					</p>
-				</motion.section>
+				</section>
 
 				{/* Section 2: Video */}
 				<div className='mx-auto px-4'>
