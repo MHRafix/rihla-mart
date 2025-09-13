@@ -166,12 +166,7 @@ function RouteComponent() {
 				<h1 className='text-2xl font-bold'>RihlaMart</h1>
 				<div className='flex gap-3'>
 					<img
-						onClick={() =>
-							window.open(
-								'https://facebook.com/sunnahsmartcollection',
-								'_blank'
-							)
-						}
+						onClick={() => window.open(productData?.facebook, '_blank')}
 						src='https://cdn-icons-png.flaticon.com/128/15047/15047435.png'
 						className='h-8 w-8 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
 					/>
