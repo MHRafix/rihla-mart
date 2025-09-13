@@ -5,6 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
+import GLightbox from 'glightbox';
+import 'glightbox/dist/css/glightbox.css';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 import { useEffect, useState } from 'react';
@@ -46,7 +48,14 @@ function RouteComponent() {
 			perView: 1,
 		},
 	});
-
+	useEffect(() => {
+		GLightbox({
+			selector: '.glightbox',
+			touchNavigation: true,
+			loop: true,
+			zoomable: true,
+		});
+	}, []);
 	// autoplay effect
 	useEffect(() => {
 		if (!slider) return;
@@ -264,18 +273,31 @@ function RouteComponent() {
 				</section>
 
 				{/* Section 4: Product Carousel */}
-				<section className='px-4'>
+				<section className='mx-4 px-4 py-8 bg-purple-950  rounded-2xl'>
+					<h3 className='text-2xl font-bold mb-6 text-center text-purple-950 dark:text-purple-300'>
+						✨ কাস্টমার রিভিউ ✨
+					</h3>
+
 					<div
 						ref={sliderRef}
-						className='keen-slider rounded-xl overflow-hidden'
+						className='keen-slider rounded-2xl overflow-hidden shadow-lg'
 					>
 						{productData?.reviewImages?.map((img, idx) => (
-							<div key={idx} className='keen-slider__slide flex justify-center'>
-								<img
-									src={img}
-									alt='Product'
-									className='w-full h-80 object-cover rounded-xl border'
-								/>
+							<div
+								key={idx}
+								className='keen-slider__slide flex justify-center group'
+							>
+								<div className='relative w-full overflow-hidden rounded-2xl border'>
+									<a href={img} className='glightbox' data-gallery='reviews'>
+										<img
+											src={img}
+											alt={`Review ${idx + 1}`}
+											className='w-full !h-[800px] object-cover transform transition-transform duration-500 group-hover:scale-110'
+										/>
+										{/* Overlay gradient */}
+										<div className='absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl' />
+									</a>
+								</div>
 							</div>
 						))}
 					</div>

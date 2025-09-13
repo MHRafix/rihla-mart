@@ -41,6 +41,7 @@
 		"date-fns": "^4.1.0",
 		"dotenv": "^16.5.0",
 		"framer-motion": "^12.23.12",
+		"glightbox": "^3.3.1",
 		"graphql": "^16.11.0",
 		"immer": "^10.1.1",
 		"jotai": "^2.12.5",
