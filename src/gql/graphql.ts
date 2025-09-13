@@ -125,7 +125,7 @@ export type BankAccountPagination = {
 export type Billing = {
   __typename?: 'Billing';
   address: Scalars['String']['output'];
-  district: Scalars['String']['output'];
+  district?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   phone: Scalars['String']['output'];
@@ -133,7 +133,7 @@ export type Billing = {
 
 export type BillingInput = {
   address: Scalars['String']['input'];
-  district: Scalars['String']['input'];
+  district?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   phone: Scalars['String']['input'];
@@ -258,6 +258,7 @@ export type CreateOrderInput = {
   items: Array<LineItemInput>;
   orgUID: Scalars['String']['input'];
   payment?: InputMaybe<PaymentInput>;
+  specialNote?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<OrderStatus>;
   total?: InputMaybe<Scalars['Float']['input']>;
   user?: InputMaybe<Scalars['String']['input']>;
@@ -477,16 +478,22 @@ export type InviteMemberToOrganizationInput = {
 
 export type LineItem = {
   __typename?: 'LineItem';
+  code?: Maybe<Scalars['String']['output']>;
+  color?: Maybe<Scalars['String']['output']>;
   price: Scalars['Float']['output'];
   product: Product;
   quantity: Scalars['Int']['output'];
+  size?: Maybe<Scalars['String']['output']>;
   subtotal: Scalars['Float']['output'];
 };
 
 export type LineItemInput = {
+  code?: InputMaybe<Scalars['String']['input']>;
+  color?: InputMaybe<Scalars['String']['input']>;
   price: Scalars['Float']['input'];
   product: Scalars['String']['input'];
   quantity: Scalars['Int']['input'];
+  size?: InputMaybe<Scalars['String']['input']>;
   subtotal: Scalars['Float']['input'];
 };
 
@@ -852,6 +859,7 @@ export type Order = {
   items: Array<LineItem>;
   orgUID: Scalars['String']['output'];
   payment?: Maybe<Payment>;
+  specialNote?: Maybe<Scalars['String']['output']>;
   status: OrderStatus;
   total: Scalars['Float']['output'];
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -1535,6 +1543,7 @@ export type UpdateOrderInput = {
   items?: InputMaybe<Array<LineItemInput>>;
   orgUID?: InputMaybe<Scalars['String']['input']>;
   payment?: InputMaybe<PaymentInput>;
+  specialNote?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<OrderStatus>;
   total?: InputMaybe<Scalars['Float']['input']>;
   user?: InputMaybe<Scalars['String']['input']>;

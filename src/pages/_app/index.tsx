@@ -5,12 +5,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
-import GLightbox from 'glightbox';
-import 'glightbox/dist/css/glightbox.css';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 import * as yup from 'yup';
 
 import {
@@ -29,7 +29,7 @@ import {
 } from '@/gql/graphql';
 import { gqlRequest } from '@/lib/api-client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Pause, Play } from 'lucide-react';
+import { Loader2, Pause, Play } from 'lucide-react';
 import { useRef } from 'react';
 import toast from 'react-hot-toast';
 import { All_Products_Query, Place_Order_Mutation } from './~query.gql/query';
@@ -48,14 +48,7 @@ function RouteComponent() {
 			perView: 1,
 		},
 	});
-	useEffect(() => {
-		GLightbox({
-			selector: '.glightbox',
-			touchNavigation: true,
-			loop: true,
-			zoomable: true,
-		});
-	}, []);
+
 	// autoplay effect
 	useEffect(() => {
 		if (!slider) return;
@@ -78,7 +71,7 @@ function RouteComponent() {
 			address: '',
 			quantity: 1,
 			code: '',
-			extraNote: undefined, // 👈 now optional
+			specialNote: '', // 👈 now optional
 		},
 	});
 
@@ -128,8 +121,8 @@ function RouteComponent() {
 					name: data?.name,
 					phone: data?.phone,
 					address: data?.address,
-					extraNote: data?.extraNote,
 				},
+				specialNote: data?.specialNote,
 				total: productPrice,
 				deliveryFee: 0,
 				payment: {
@@ -283,12 +276,12 @@ function RouteComponent() {
 						className='keen-slider rounded-2xl overflow-hidden'
 					>
 						{productData?.reviewImages?.map((img, idx) => (
-							<div
-								key={idx}
-								className='keen-slider__slide flex justify-center group'
-							>
-								<div className='relative w-full overflow-hidden rounded-2xl border'>
-									<a href={img} className='glightbox' data-gallery='reviews'>
+							<Zoom>
+								<div
+									key={idx}
+									className='keen-slider__slide flex justify-center group'
+								>
+									<div className='relative w-full overflow-hidden rounded-2xl border'>
 										<img
 											src={img}
 											alt={`Review ${idx + 1}`}
@@ -296,9 +289,9 @@ function RouteComponent() {
 										/>
 										{/* Overlay gradient */}
 										<div className='absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl' />
-									</a>
+									</div>
 								</div>
-							</div>
+							</Zoom>
 						))}
 					</div>
 				</section>
@@ -321,12 +314,13 @@ function RouteComponent() {
 				<section className='px-4'>
 					<div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
 						{productFetchedData?.carouselImages?.map((img, idx) => (
-							<img
-								key={idx}
-								src={img?.externalUrl!}
-								alt='Product'
-								className='w-full h-[250px] object-cover rounded-xl border'
-							/>
+							<Zoom key={idx}>
+								<img
+									src={img?.externalUrl!}
+									alt='Product'
+									className='w-full h-[250px] object-cover rounded-xl border'
+								/>
+							</Zoom>
 						))}
 					</div>
 				</section>
@@ -355,7 +349,7 @@ function RouteComponent() {
 				{/* Section 8: Checkout Form */}
 				<section className='mx-4 py-10'>
 					<Card className='bg-white text-purple-950 border shadow-sm mx-auto'>
-						<CardContent className='p-6 space-y-4'>
+						<CardContent className='px-4 space-y-4'>
 							<h3 className='text-2xl font-bold text-center'>
 								অর্ডার করুন এখনই
 							</h3>
@@ -379,6 +373,7 @@ function RouteComponent() {
 														placeholder='আপনার নাম'
 														{...field}
 														className='py-6'
+														disabled={placeOrder.isPending}
 													/>
 												</FormControl>
 												<FormMessage />
@@ -400,6 +395,7 @@ function RouteComponent() {
 														placeholder='মোবাইল নাম্বার'
 														{...field}
 														className='py-6'
+														disabled={placeOrder.isPending}
 													/>
 												</FormControl>
 												<FormMessage />
@@ -422,6 +418,7 @@ function RouteComponent() {
 														placeholder='বিস্তারিত ঠিকানা ...'
 														{...field}
 														className='py-6'
+														disabled={placeOrder.isPending}
 													/>
 												</FormControl>
 												<FormMessage />
@@ -448,7 +445,9 @@ function RouteComponent() {
 																Math.max(1, (field.value ?? 1) - 1)
 															)
 														}
-														disabled={field?.value === 1}
+														disabled={
+															field?.value === 1 || placeOrder.isPending
+														}
 													>
 														➖
 													</Button>
@@ -462,7 +461,9 @@ function RouteComponent() {
 														onClick={() =>
 															field.onChange((field.value ?? 1) + 1)
 														}
-														disabled={field?.value === 4}
+														disabled={
+															field?.value === 4 || placeOrder.isPending
+														}
 													>
 														➕
 													</Button>
@@ -484,6 +485,7 @@ function RouteComponent() {
 
 												<FormControl>
 													<Input
+														disabled={placeOrder.isPending}
 														placeholder='প্রোডাক্ট কোড দিন'
 														{...field}
 														className='py-6'
@@ -499,7 +501,7 @@ function RouteComponent() {
 									<FormField
 										// @ts-ignore
 										control={form.control}
-										name='extraNote'
+										name='specialNote'
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>অতিরিক্ত নোট (অপশনাল)</FormLabel>
@@ -508,6 +510,7 @@ function RouteComponent() {
 														placeholder='অতিরিক্ত কিছু জানাতে চাইলে লিখুন'
 														{...field}
 														className='py-6'
+														disabled={placeOrder.isPending}
 													/>
 												</FormControl>
 												<FormMessage />
@@ -556,8 +559,13 @@ function RouteComponent() {
 									<Button
 										type='submit'
 										className='w-full bg-purple-950 text-white font-bold py-7 cursor-pointer text-xl'
+										disabled={placeOrder.isPending}
 									>
-										অর্ডার কনফার্ম করুন
+										{placeOrder.isPending ? (
+											<Loader2 className='!w-6 !h-6 animate-spin spin-in-180' />
+										) : (
+											'অর্ডার কনফার্ম করুন'
+										)}
 									</Button>
 								</form>
 							</Form>
@@ -594,7 +602,7 @@ type FormValues = {
 	address: string;
 	quantity: number;
 	code: string;
-	extraNote?: string; // 👈 এখানে optional
+	specialNote?: string; // 👈 এখানে optional
 };
 
 type ProductDataType = {

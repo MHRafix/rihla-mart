@@ -108,8 +108,8 @@ function RouteComponent() {
 					</div>
 
 					{/* Tips */}
-					<div className='mt-8 text-center text-xs text-slate-500 dark:text-slate-400'>
-						Keep this Order ID for support and tracking.
+					<div className='mt-8 text-center text-sm text-slate-500 dark:text-slate-400'>
+						সহায়তা এবং ট্র্যাকিংয়ের জন্য এই অর্ডার আইডিটি রাখুন।
 					</div>
 				</div>
 			</div>
