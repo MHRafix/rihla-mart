@@ -134,11 +134,6 @@ function RouteComponent() {
 		placeOrder?.mutate(payload);
 	};
 
-	const productImages = Array.from(
-		{ length: 40 },
-		(_, i) => `https://picsum.photos/400/400?random=${i + 1}`
-	);
-
 	useEffect(() => {
 		fetch(
 			'https://raw.githubusercontent.com/MHRafix/rihla-mart-data/main/data.json'
