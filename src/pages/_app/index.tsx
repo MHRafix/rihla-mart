@@ -274,13 +274,13 @@ function RouteComponent() {
 
 				{/* Section 4: Product Carousel */}
 				<section className='mx-4 px-4 py-8 bg-purple-950  rounded-2xl'>
-					<h3 className='text-2xl font-bold mb-6 text-center text-purple-950 dark:text-purple-300'>
+					<h3 className='text-2xl font-bold mb-6 text-center text-white'>
 						✨ কাস্টমার রিভিউ ✨
 					</h3>
 
 					<div
 						ref={sliderRef}
-						className='keen-slider rounded-2xl overflow-hidden shadow-lg'
+						className='keen-slider rounded-2xl overflow-hidden'
 					>
 						{productData?.reviewImages?.map((img, idx) => (
 							<div
@@ -292,7 +292,7 @@ function RouteComponent() {
 										<img
 											src={img}
 											alt={`Review ${idx + 1}`}
-											className='w-full !h-[800px] object-cover transform transition-transform duration-500 group-hover:scale-110'
+											className='w-full h-[700px] object-cover transform transition-transform duration-500 group-hover:scale-110'
 										/>
 										{/* Overlay gradient */}
 										<div className='absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl' />
