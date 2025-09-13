@@ -56,11 +56,11 @@ function RouteComponent() {
 					</div>
 
 					<h1 className='mt-6 text-center text-2xl sm:text-3xl font-semibold tracking-tight'>
-						Thank you! Your order was placed successfully.
+						ধন্যবাদ! আপনার অর্ডার সফল হয়েছে।
 					</h1>
 					<p className='mt-3 text-center text-sm sm:text-base text-slate-600 dark:text-slate-300'>
-						We’ve sent a confirmation email with your order details. You can
-						track or manage your order anytime.
+						আমরা আপনার অর্ডারের বিবরণ সহ একটি নিশ্চিতকরণ ইমেল/মেসেজ পাঠিয়েছি।
+						আপনি যেকোনো সময় আপনার অর্ডার ট্র্যাক করতে পারেন।
 					</p>
 
 					{/* Order ID */}

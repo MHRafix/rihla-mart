@@ -254,16 +254,17 @@ function RouteComponent() {
 					{/* Title & Price Block */}
 					<div className='bg-purple-950 text-white rounded-xl p-6 space-y-4 shadow-lg'>
 						<h3 className='text-2xl'>
-							খিমার প্রাইস{' '}
-							<span className='ml-2 text-4xl font-extrabold text-amber-400 underline underline-offset-[10px]'>
-								{productData?.unitPrice} টাকা
-							</span>
+							খিমার প্রাইস
+							<span className='ml-2 text-3xl font-extrabold text-amber-400'>
+								{productData?.unitPrice}
+							</span>{' '}
+							টাকা
 						</h3>
 					</div>
 
 					{/* Delivery Block */}
 					<div className='bg-teal-800 text-white rounded-xl p-5 shadow-md'>
-						<h2 className='text-2xl'>ডেলিভারি চার্জ ফ্রি 😀</h2>
+						<h2 className='text-2xl'>ডেলিভারি চার্জ ফ্রি 😍</h2>
 					</div>
 				</section>
 
@@ -273,7 +274,7 @@ function RouteComponent() {
 						ref={sliderRef}
 						className='keen-slider rounded-xl overflow-hidden'
 					>
-						{productImages.slice(0, 5).map((img, idx) => (
+						{productData?.reviewImages?.map((img, idx) => (
 							<div key={idx} className='keen-slider__slide flex justify-center'>
 								<img
 									src={img}
@@ -316,7 +317,7 @@ function RouteComponent() {
 				{/* Section 7: Free Delivery */}
 				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-4'>
 					<h1 className='text-3xl text-amber-500 leading-12'>
-						✅ ডেলিভারি চার্জ <br /> 😀 একদম ফ্রি 😀
+						😍 ডেলিভারি চার্জ <br /> ফ্রি 😍
 					</h1>
 
 					<h2 className='mt-3 text-xl font-medium leading-8'>
@@ -326,9 +327,9 @@ function RouteComponent() {
 				</section>
 
 				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-4'>
-					<p className='text-lg text-amber-500 leading-12'>✅ ২ পিস ১৭০০</p>
-					<p className='text-lg text-amber-500 leading-12'>✅ ৩ পিস ২৪৫০</p>
-					<p className='text-lg text-amber-500 leading-12'>✅ ৪ পিস ৩২০০</p>
+					<p className='text-md text-amber-500 leading-12'>✅ ২ পিস ১৭০০</p>
+					<p className='text-md text-amber-500 leading-12'>✅ ৩ পিস ২৪৫০</p>
+					<p className='text-md text-amber-500 leading-12'>✅ ৪ পিস ৩২০০</p>
 
 					<h2 className='mt-3 text-lg font-medium bg-amber-800 p-2 rounded-xl'>
 						✅ পাইকারি নিতে কল করুন {productData?.whatsappNumber}
@@ -590,6 +591,7 @@ type ProductDataType = {
 	facebook: string;
 	whatsappNumber: string;
 	description: string[];
+	reviewImages: string[];
 };
 
 const priceByQuantity = (quantity: number, productData: ProductDataType) => {
