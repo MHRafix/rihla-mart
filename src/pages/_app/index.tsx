@@ -4,12 +4,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import 'keen-slider/keen-slider.min.css';
-import { useKeenSlider } from 'keen-slider/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Zoom from 'react-medium-image-zoom';
-import 'react-medium-image-zoom/dist/styles.css';
+
 import * as yup from 'yup';
 
 import {
@@ -21,17 +18,24 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import {
+	LineItem,
 	OrderStatus,
 	PaymentMethod,
 	PaymentStatus,
 	ProductPagination,
 } from '@/gql/graphql';
 import { gqlRequest } from '@/lib/api-client';
+import { trackEvent } from '@/lib/fbPixel';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Loader2, Pause, Play } from 'lucide-react';
-import { useRef } from 'react';
+import { Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { All_Products_Query, Place_Order_Mutation } from './~query.gql/query';
+// @ts-ignore
+import 'swiper/css';
+import Header from './~module/components/Header';
+import PriceAndReview from './~module/components/PriceAndReview';
+import ProductDetails from './~module/components/ProductDetails';
+import VideoAndHeading from './~module/components/VideoAndHeading';
 
 export const Route = createFileRoute('/_app/')({
 	component: RouteComponent,
@@ -40,26 +44,6 @@ export const Route = createFileRoute('/_app/')({
 function RouteComponent() {
 	const [productData, setProductData] = useState<ProductDataType>();
 	const navigate = useNavigate();
-
-	const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
-		loop: true,
-		slides: {
-			perView: 1,
-		},
-	});
-
-	// autoplay effect
-	useEffect(() => {
-		if (!slider) return;
-		let timer: NodeJS.Timeout;
-		function autoplay() {
-			timer = setInterval(() => {
-				slider.current?.next();
-			}, 2500); // 2.5s autoplay
-		}
-		autoplay();
-		return () => clearInterval(timer);
-	}, [slider]);
 
 	const form = useForm<FormValues>({
 		// @ts-ignore
@@ -75,11 +59,24 @@ function RouteComponent() {
 	});
 
 	const placeOrder = useMutation({
-		mutationFn: (payload: any) =>
-			gqlRequest({
+		mutationFn: async (payload: any) => {
+			await gqlRequest({
 				query: Place_Order_Mutation,
 				variables: payload,
-			}),
+			});
+
+			trackEvent('Purchase', {
+				value: payload?.payload?.total,
+				currency: 'BDT',
+				content_ids: [productFetchedData?._id],
+				contents: payload?.payload?.items?.map((item: LineItem) => ({
+					code: item?.code,
+					quantity: item?.quantity,
+					item_price: item?.price,
+					id: item?.product,
+				})),
+			});
+		},
 		onSuccess(data) {
 			toast.success('Order has been placed.');
 			// @ts-ignore
@@ -146,186 +143,18 @@ function RouteComponent() {
 			.catch((err) => console.error(err));
 	}, []);
 
-	const videoRef = useRef<HTMLVideoElement>(null);
-	const [isPlaying, setIsPlaying] = useState(false);
-
-	const handleTogglePlay = () => {
-		if (!videoRef.current) return;
-		if (isPlaying) {
-			videoRef.current.pause();
-			setIsPlaying(false);
-		} else {
-			videoRef.current.play();
-			setIsPlaying(true);
-		}
-	};
 	return (
 		<div className='bg-white text-purple-950 min-h-screen'>
-			{/* Header */}
-			<header className='flex justify-between items-center px-4 py-4 shadow-md border-b'>
-				<h1 className='text-2xl font-bold'>RihlaMart</h1>
-				<div className='flex gap-3'>
-					<img
-						onClick={() => window.open(productData?.facebook, '_blank')}
-						src='https://cdn-icons-png.flaticon.com/128/15047/15047435.png'
-						className='h-8 w-8 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
-					/>
-					<img
-						onClick={() =>
-							window.open(
-								`https://wa.me/${productData?.whatsappNumber}`,
-								'_blank'
-							)
-						}
-						src='https://cdn-icons-png.flaticon.com/128/3670/3670051.png'
-						className='h-8 w-8 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
-					/>
-					<img
-						onClick={() =>
-							(window.location.href = `tel:${productData?.whatsappNumber}`)
-						}
-						src='https://cdn-icons-png.flaticon.com/128/724/724664.png'
-						className='h-8 w-8 cursor-pointer hover:scale-[1.2] hover:duration-300 mx-1'
-					/>
-				</div>
-			</header>
-
+			<Header productData={productData!} />
 			<main className='space-y-12'>
-				<div className='text-center px-4 py-5 bg-purple-950 text-white rounded-xl mt-5 mx-4'>
-					<h2 className='text-xl font-bold'>
-						১০০% সুতি কাপড়ের সালাত লং খিমার।
-					</h2>
-				</div>
-				{/* Section 1: Hadith */}
-				<section className='text-center px-4 py-5 bg-purple-950 text-white rounded-xl mt-5 mx-4'>
-					<h2 className='text-xl md:text-4xl font-bold mb-4'>
-						রাসূলুল্লাহ (সা.) বলেন,
-					</h2>
-					<h2 className='text-3xl font-bold mb-4'>
-						لا تقبل صلاة الحائض إلا بخمار
-					</h2>
-					<p className='mt-2 text-xl font-semibold'>
-						খিমার পরিধান ছাড়া কোনো প্রাপ্ত বয়স্কা নারীর নামাজ কবূল হবেনা।
-						(তিরমিজি ৩৭৭, মিশকাত ৭৬২ ও আবু দাউদ ৬৪১)
-					</p>
-				</section>
+				<VideoAndHeading />
 
-				{/* Section 2: Video */}
-				<div className='mx-auto px-4'>
-					<div className='relative !w-full h-[400px] overflow-hidden rounded-2xl shadow-lg bg-black aspect-video'>
-						<video
-							ref={videoRef}
-							className='absolute inset-0 w-full h-full object-fill rounded-2xl'
-							src='/video.mp4'
-							controls={false} // hide default controls
-						/>
+				<PriceAndReview productData={productData!} />
 
-						{/* Center play button */}
-						<button
-							onClick={handleTogglePlay}
-							className='absolute inset-0 flex items-center justify-center'
-						>
-							<div className='bg-black/50 rounded-full p-6 hover:bg-black/70 transition'>
-								{isPlaying ? (
-									<Pause className='w-10 h-10 text-white' />
-								) : (
-									<Play className='w-10 h-10 text-white' />
-								)}
-							</div>
-						</button>
-					</div>
-				</div>
-
-				{/* Section 3: Price */}
-				<section className='text-center font-bold space-y-6 rounded-xl mx-4'>
-					{/* Title & Price Block */}
-					<div className='bg-purple-950 text-white rounded-xl p-6 space-y-4 shadow-lg'>
-						<h3 className='text-2xl'>
-							খিমার প্রাইস
-							<span className='ml-2 text-3xl font-extrabold text-amber-400'>
-								{productData?.unitPrice}
-							</span>{' '}
-							টাকা
-						</h3>
-					</div>
-
-					{/* Delivery Block */}
-					<div className='bg-teal-800 text-white rounded-xl p-5 shadow-md'>
-						<h2 className='text-2xl'>ডেলিভারি চার্জ ফ্রি 😍</h2>
-					</div>
-				</section>
-
-				{/* Section 4: Product Carousel */}
-				<section className='mx-4 px-4 py-8 bg-purple-950  rounded-2xl'>
-					<h3 className='text-2xl font-bold mb-6 text-center text-white'>
-						✨ কাস্টমার রিভিউ ✨
-					</h3>
-
-					<div
-						ref={sliderRef}
-						className='keen-slider rounded-2xl overflow-hidden'
-					>
-						{productData?.reviewImages?.map((img, idx) => (
-							<Zoom>
-								<div
-									key={idx}
-									className='keen-slider__slide flex justify-center group'
-								>
-									<div className='relative w-full overflow-hidden rounded-2xl border'>
-										<img
-											src={img}
-											alt={`Review ${idx + 1}`}
-											className='w-full h-[700px] object-cover transform transition-transform duration-500 group-hover:scale-110'
-										/>
-										{/* Overlay gradient */}
-										<div className='absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl' />
-									</div>
-								</div>
-							</Zoom>
-						))}
-					</div>
-				</section>
-
-				{/* Section 5: Product Details */}
-				<section className='px-4'>
-					<Card className='text-white bg-purple-950 border shadow-sm'>
-						<CardContent className='px-4 py-3 space-y-3'>
-							<h3 className='text-2xl font-bold'>প্রোডাক্ট ডিটেইলসঃ</h3>
-							<ul className='list-disc pl-5 space-y-2 text-lg font-medium'>
-								{productData?.description?.map((description, idx) => (
-									<li key={idx}>{description}</li>
-								))}
-							</ul>
-						</CardContent>
-					</Card>
-				</section>
-
-				{/* Section 6: Image Grid */}
-				<section className='px-4'>
-					<div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-						{productFetchedData?.carouselImages?.map((img, idx) => (
-							<Zoom key={idx}>
-								<img
-									src={img?.externalUrl!}
-									alt='Product'
-									className='w-full h-[250px] object-cover rounded-xl border'
-								/>
-							</Zoom>
-						))}
-					</div>
-				</section>
-
-				{/* Section 7: Free Delivery */}
-				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-4'>
-					<h1 className='text-3xl text-amber-500 leading-12'>
-						😍 ডেলিভারি চার্জ <br /> ফ্রি 😍
-					</h1>
-
-					<h2 className='mt-3 text-xl font-medium leading-8'>
-						অগ্রিম কোন টাকা দিতে হবে না। পার্সেল হাতে বুঝে পেয়ে, চেক করে তারপর
-						ডেলিভারি ম্যানের কাছে টাকা পরিশোধ করতে পারবেন।
-					</h2>
-				</section>
+				<ProductDetails
+					productData={productData!}
+					productFetchedData={productFetchedData!}
+				/>
 
 				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-4'>
 					<p className='text-md text-amber-500 leading-12'>✅ ২ পিস ১৭০০</p>
@@ -336,8 +165,8 @@ function RouteComponent() {
 						✅ পাইকারি নিতে কল করুন {productData?.whatsappNumber}
 					</h2>
 				</section>
-				{/* Section 8: Checkout Form */}
-				<section className='mx-4 py-10'>
+
+				<section className='mx-4 py-3'>
 					<Card className='bg-white text-purple-950 border shadow-sm mx-auto'>
 						<CardContent className='px-4 space-y-4'>
 							<h3 className='text-2xl font-bold text-center'>
@@ -595,7 +424,7 @@ type FormValues = {
 	specialNote?: string; // 👈 এখানে optional
 };
 
-type ProductDataType = {
+export type ProductDataType = {
 	productMainTitle: string;
 	productVideoLink: string;
 	unitPrice: number;
