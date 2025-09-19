@@ -1,4 +1,3 @@
-import { Pause, Play } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 const VideoAndHeading = () => {
@@ -33,7 +32,7 @@ const VideoAndHeading = () => {
 					(তিরমিজি ৩৭৭, মিশকাত ৭৬২ ও আবু দাউদ ৬৪১)
 				</p>
 			</section>
-			<div className='mx-auto px-4'>
+			{/* <div className='mx-auto px-4'>
 				<div className='relative !w-full h-[400px] overflow-hidden rounded-2xl shadow-lg bg-black aspect-video'>
 					<video
 						ref={videoRef}
@@ -55,7 +54,7 @@ const VideoAndHeading = () => {
 						</div>
 					</button>
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 };

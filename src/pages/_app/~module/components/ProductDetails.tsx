@@ -34,18 +34,6 @@ const ProductDetails: FC<{
 	return (
 		<div className='space-y-8'>
 			<section className='px-4'>
-				<Card className='text-white bg-purple-950 border shadow-sm'>
-					<CardContent className='px-4 py-3 space-y-3'>
-						<h3 className='text-2xl font-bold'>প্রোডাক্ট ডিটেইলসঃ</h3>
-						<ul className='list-disc pl-5 space-y-2 text-lg font-medium'>
-							{productData?.description?.map((description, idx) => (
-								<li key={idx}>{description}</li>
-							))}
-						</ul>
-					</CardContent>
-				</Card>
-			</section>{' '}
-			<section className='px-4'>
 				<div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
 					{products?.map((img, idx) => (
 						<Zoom key={idx}>
@@ -65,16 +53,27 @@ const ProductDetails: FC<{
 						</Zoom>
 					))}
 				</div>
-			</section>{' '}
-			<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-4'>
-				<h1 className='text-3xl text-amber-500 leading-12'>
-					😍 ডেলিভারি চার্জ <br /> ফ্রি 😍
-				</h1>
-
-				<h2 className='mt-3 text-xl font-medium leading-8'>
-					অগ্রিম কোন টাকা দিতে হবে না। পার্সেল হাতে বুঝে পেয়ে, চেক করে তারপর
-					ডেলিভারি ম্যানের কাছে টাকা পরিশোধ করতে পারবেন।
-				</h2>
+			</section>
+			<section className='px-4 space-y-4'>
+				<div className='bg-purple-950 text-white rounded-xl p-6 space-y-4 shadow-lg'>
+					<h3 className='text-2xl'>
+						খিমার প্রাইস
+						<span className='ml-2 text-3xl font-extrabold text-amber-400'>
+							{productData?.unitPrice}
+						</span>{' '}
+						টাকা
+					</h3>
+				</div>
+				<Card className='text-white bg-purple-950 rounded-xl border shadow-lg'>
+					<CardContent className='px-4 py-3 space-y-3'>
+						<h3 className='text-2xl font-bold'>প্রোডাক্ট ডিটেইলসঃ</h3>
+						<ul className='list-disc pl-5 space-y-2 text-lg font-medium'>
+							{productData?.description?.map((description, idx) => (
+								<li key={idx}>{description}</li>
+							))}
+						</ul>
+					</CardContent>
+				</Card>
 			</section>
 		</div>
 	);

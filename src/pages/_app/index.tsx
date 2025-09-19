@@ -148,13 +148,11 @@ function RouteComponent() {
 			<Header productData={productData!} />
 			<main className='space-y-12'>
 				<VideoAndHeading />
-
-				<PriceAndReview productData={productData!} />
-
 				<ProductDetails
 					productData={productData!}
 					productFetchedData={productFetchedData!}
 				/>
+				<PriceAndReview productData={productData!} />
 
 				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-4'>
 					<p className='text-md text-amber-500 leading-12'>✅ ২ পিস ১৭০০</p>
@@ -165,7 +163,16 @@ function RouteComponent() {
 						✅ পাইকারি নিতে কল করুন {productData?.whatsappNumber}
 					</h2>
 				</section>
+				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-4'>
+					<h1 className='text-3xl text-amber-500 leading-12'>
+						😍 ডেলিভারি চার্জ <br /> ফ্রি 😍
+					</h1>
 
+					<h2 className='mt-3 text-xl font-medium leading-8'>
+						অগ্রিম কোন টাকা দিতে হবে না। পার্সেল হাতে বুঝে পেয়ে, চেক করে তারপর
+						ডেলিভারি ম্যানের কাছে টাকা পরিশোধ করতে পারবেন।
+					</h2>
+				</section>
 				<section className='mx-4 py-3'>
 					<Card className='bg-white text-purple-950 border shadow-sm mx-auto'>
 						<CardContent className='px-4 space-y-4'>
