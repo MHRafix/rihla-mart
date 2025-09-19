@@ -35,7 +35,6 @@ const PriceAndReview: FC<{ productData: ProductDataType }> = ({
 						delay: 2000, // 2.5s per slide
 						disableOnInteraction: false, // keep autoplay after interaction
 					}}
-					loop={true} // 🔄 infinite loop
 					modules={[Autoplay]}
 					className='mySwiper'
 				>

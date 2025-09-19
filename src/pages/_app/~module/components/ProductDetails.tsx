@@ -13,20 +13,20 @@ const ProductDetails: FC<{
 	const products = [
 		'/products/101l.jpg',
 		'/products/102l.jpg',
-		'/products/103l.jpg',
+		'/products/103l.webp',
 		'/products/104l.jpg',
 		'/products/105l.jpg',
-		'/products/106l.jpg',
-		'/products/107l.jpg',
-		'/products/108l.jpg',
-		'/products/109l.jpg',
-		'/products/110l.jpg',
-		'/products/111l.jpg',
-		'/products/112l.jpg',
-		'/products/113l.jpg',
-		'/products/114l.jpg',
-		'/products/115l.jpg',
-		'/products/116l.jpg',
+		'/products/106l.webp',
+		'/products/107l.webp',
+		'/products/108l.webp',
+		'/products/109l.webp',
+		'/products/110l.webp',
+		'/products/111l.webp',
+		'/products/112l.webp',
+		'/products/113l.webp',
+		'/products/114l.webp',
+		'/products/115l.webp',
+		'/products/116l.webp',
 		'/products/117l.jpg',
 		'/products/118l.jpg',
 	];
@@ -59,6 +59,7 @@ const ProductDetails: FC<{
 								}
 								src={img!}
 								alt='Product'
+								loading='lazy'
 								className='w-full h-[250px] object-cover rounded-xl border'
 							/>
 						</Zoom>
