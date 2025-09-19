@@ -151,7 +151,10 @@ function RouteComponent() {
 
 				<PriceAndReview productData={productData!} />
 
-				<ProductDetails productData={productData!} />
+				<ProductDetails
+					productData={productData!}
+					productFetchedData={productFetchedData!}
+				/>
 
 				<section className='text-center py-6 px-4 font-bold text-white bg-purple-950 rounded-xl mx-4'>
 					<p className='text-md text-amber-500 leading-12'>✅ ২ পিস ১৭০০</p>

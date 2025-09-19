@@ -1,4 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { Product } from '@/gql/graphql';
+import { trackEvent } from '@/lib/fbPixel';
 import { FC } from 'react';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
@@ -6,7 +8,8 @@ import { ProductDataType } from '../..';
 
 const ProductDetails: FC<{
 	productData: ProductDataType;
-}> = ({ productData }) => {
+	productFetchedData: Product;
+}> = ({ productData, productFetchedData }) => {
 	const products = [
 		'/products/101.jpg',
 		'/products/101l.jpg',
@@ -66,6 +69,13 @@ const ProductDetails: FC<{
 					{products?.map((img, idx) => (
 						<Zoom key={idx}>
 							<img
+								onClick={() =>
+									trackEvent('ProductClicked', {
+										value: productFetchedData?.salePrice,
+										currency: 'BDT',
+										content_ids: [productFetchedData?._id],
+									})
+								}
 								src={img!}
 								alt='Product'
 								className='w-full h-[250px] object-cover rounded-xl border'
