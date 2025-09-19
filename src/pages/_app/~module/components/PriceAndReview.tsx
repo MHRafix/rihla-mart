@@ -16,7 +16,7 @@ const PriceAndReview: FC<{ productData: ProductDataType }> = ({
 						খিমার প্রাইস
 						<span className='ml-2 text-3xl font-extrabold text-amber-400'>
 							{productData?.unitPrice}
-						</span>
+						</span>{' '}
 						টাকা
 					</h3>
 				</div>
